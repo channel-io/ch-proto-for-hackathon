@@ -1,0 +1,180 @@
+syntax = "proto3";
+
+package io.channel.coreapi.v1.model;
+
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+import "buf/validate/validate.proto";
+
+option java_package = "io.channel.api.proto.coreapi.v1.model";
+option go_package = "github.com/channel-io/ch-proto/coreapi/v1/go/model";
+option java_multiple_files = true;
+
+enum MessageState {
+  MESSAGE_STATE_UNSPECIFIED = 0;
+  MESSAGE_STATE_SENDING = 1;
+  MESSAGE_STATE_SENT = 2;
+  MESSAGE_STATE_FAILED = 3;
+  MESSAGE_STATE_REMOVED = 4;
+}
+
+enum MessageOption {
+  MESSAGE_OPTION_UNSPECIFIED = 0;
+  MESSAGE_OPTION_ACT_AS_MANAGER = 1;
+  MESSAGE_OPTION_DISPLAY_AS_CHANNEL = 2;
+  MESSAGE_OPTION_DO_NOT_POST = 3;
+  MESSAGE_OPTION_DO_NOT_SEARCH = 4;
+  MESSAGE_OPTION_DO_NOT_SEND_APP = 5;
+  MESSAGE_OPTION_DO_NOT_UPDATE_DESK = 6;
+  MESSAGE_OPTION_IMMUTABLE = 7;
+  MESSAGE_OPTION_PRIVATE = 8;
+  MESSAGE_OPTION_SILENT = 9 [deprecated = true];
+  MESSAGE_OPTION_SILENT_TO_MANAGER = 10;
+  MESSAGE_OPTION_SILENT_TO_USER = 11;
+}
+
+enum MessageAlertLevel {
+  MESSAGE_ALERT_LEVEL_UNSPECIFIED = 0;
+  MESSAGE_ALERT_LEVEL_ALERT = 1;
+  MESSAGE_ALERT_LEVEL_UNREAD = 2;
+  MESSAGE_ALERT_LEVEL_NONE = 3;
+}
+
+enum MessageColorVariant {
+  MESSAGE_COLOR_VARIANT_UNSPECIFIED = 0;
+  MESSAGE_COLOR_VARIANT_COBALT = 1;
+  MESSAGE_COLOR_VARIANT_GREEN = 2;
+  MESSAGE_COLOR_VARIANT_ORANGE = 3;
+  MESSAGE_COLOR_VARIANT_RED = 4;
+  MESSAGE_COLOR_VARIANT_BLACK = 5;
+  MESSAGE_COLOR_VARIANT_PINK = 6;
+  MESSAGE_COLOR_VARIANT_PURPLE = 7;
+}
+
+enum MessageMeetState {
+  MESSAGE_MEET_STATE_UNSPECIFIED = 0;
+  MESSAGE_MEET_STATE_LIVE = 1;
+  MESSAGE_MEET_STATE_ENDED = 2;
+  MESSAGE_MEET_STATE_TRANSCRIBING = 3;
+  MESSAGE_MEET_STATE_TRANSCRIBED = 4;
+  MESSAGE_MEET_STATE_TRANSCRIBE_FAILED = 5;
+}
+
+enum MeetMode {
+  MEET_MODE_UNSPECIFIED = 0;
+  MEET_MODE_AUDIO = 1;
+  MEET_MODE_VIDEO = 2;
+}
+
+message Message {
+  string id = 1;
+  string channel_id = 2;
+  string chat_type = 3;
+  string chat_id = 4;
+  string person_type = 5;
+  string person_id = 6;
+  string request_id = 7;
+  string language = 8;
+  google.protobuf.Timestamp created_at = 9;
+  int64 version = 10;
+  repeated google.protobuf.Struct blocks = 11;
+  string plain_text = 12;
+  google.protobuf.Timestamp updated_at = 13;
+  string inbound_email_id = 14;
+
+  message MessageThread {
+    string id = 1;
+    repeated string manager_ids = 2;
+    repeated string replied_manager_ids = 3;
+    int32 reply_count = 4;
+  }
+
+  MessageThread thread = 15;
+
+  message MessageMeet {
+    string id = 1;
+    MessageMeetState state = 2;
+    MeetMode mode = 3;
+    repeated string amassed_persons = 4;
+    google.protobuf.Timestamp room_started_at = 5;
+    google.protobuf.Struct call = 6;
+    google.protobuf.Struct recording = 7;
+    string country = 8;
+    repeated string manager_ids = 9;
+  }
+
+  MessageMeet meet = 16;
+
+  message Button {
+    string title = 1 [
+      (buf.validate.field).cel = {
+        id: "string.maxLen"
+        message: "value length must be no more than 30 characters"
+        expression: "size(this) <= 30"
+      },
+      (buf.validate.field).cel = {
+        id: "string.minLen"
+        message: "value length must be at least 1 characters"
+        expression: "size(this) >= 1"
+      },
+      (buf.validate.field).required = true
+    ];
+    MessageColorVariant color_variant = 2;
+
+    message Action {
+      oneof action_type {
+        option (buf.validate.oneof).required = true;
+        CommandAction command_action = 1;
+        WebAction web_action = 2;
+        WAMAction wam_action = 3;
+      }
+
+      message CommandAction {
+        message CommandAttributes {
+          string app_id = 1 [(buf.validate.field).required = true];
+          string name = 2 [(buf.validate.field).required = true];
+          google.protobuf.Struct params = 3;
+        }
+        CommandAttributes attributes = 1;
+      }
+
+      message WebAction {
+        message WebAttributes {
+          string url = 1 [(buf.validate.field).required = true];
+        }
+        WebAttributes attributes = 1;
+      }
+
+      message WAMAction {
+        message WAMAttributes {
+          string app_id = 1 [(buf.validate.field).required = true];
+          string client_id = 4;
+          string name = 2 [(buf.validate.field).required = true];
+          google.protobuf.Struct wam_args = 3;
+        }
+        WAMAttributes attributes = 1;
+      }
+    }
+
+    Action action = 3 [(buf.validate.field).required = true];
+  }
+
+  repeated Button buttons = 17;
+
+  message File {
+    string url = 1 [(buf.validate.field).required = true];
+    string mime = 2 [(buf.validate.field).required = true];
+    string file_name = 3 [(buf.validate.field).required = true];
+  }
+
+  repeated File files = 18;
+  google.protobuf.Struct web_page = 19;
+  google.protobuf.Struct log = 20;
+  repeated google.protobuf.Struct reactions = 21;
+  google.protobuf.Struct form = 22;
+  MessageState state = 23;
+  repeated MessageOption options = 24;
+  google.protobuf.Struct marketing = 25;
+  google.protobuf.Struct support_bot = 26;
+  MessageAlertLevel alert_level = 27;
+}

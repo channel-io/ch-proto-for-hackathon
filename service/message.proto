@@ -1,0 +1,127 @@
+syntax = "proto3";
+
+package io.channel.coreapi.v1.service;
+
+import "coreapi/v1/model/message.proto";
+import "google/protobuf/struct.proto";
+import "buf/validate/validate.proto";
+
+option java_package = "io.channel.api.proto.coreapi.v1.service";
+option go_package = "github.com/channel-io/ch-proto/coreapi/v1/go/service";
+option java_multiple_files = true;
+
+// DTO for writing a message.
+message WriteMessageRequestDto {
+  repeated google.protobuf.Struct blocks = 1;
+  string plain_text = 2;
+  repeated io.channel.coreapi.v1.model.Message.Button buttons = 3;
+  option (buf.validate.message).cel = {
+    id: "repeated.maxItem"
+    message: "value must contain no more than 2 items"
+    expression: "size(this.buttons) <= 2"
+  };
+  repeated io.channel.coreapi.v1.model.Message.File files = 4;
+  option (buf.validate.message).cel = {
+    id: "repeated.maxItem"
+    message: "value must contain no more than 30 items"
+    expression: "size(this.files) <= 30"
+  };
+  google.protobuf.Struct web_page = 5;
+  google.protobuf.Struct form = 6;
+  repeated io.channel.coreapi.v1.model.MessageOption options = 7;
+  string request_id = 8;
+  oneof writer {
+    option (buf.validate.oneof).required = true;
+    string bot_name = 9;
+    string manager_id = 10;
+    string user_id = 11;
+  }
+}
+
+// Writes a message to a group, or a thread of a group.
+// - If `root_message_id` is not provided, it writes a new message to the group.
+//   If `root_message_id` is provided, it writes a new message as a thread of the message, using `root_message_id` as the parent message.
+// - `broadcast` option can be specified when writing a new message in a thread.
+message WriteGroupMessageRequest {
+  string channel_id = 5 [(buf.validate.field).required = true];
+  string group_id = 1 [(buf.validate.field).required = true];
+  string root_message_id = 2;
+  bool broadcast = 4;
+  WriteMessageRequestDto dto = 3;
+}
+
+// Writes a message to a group, or a thread of a group.
+message WriteGroupMessageResult {
+  io.channel.coreapi.v1.model.Message message = 1;
+}
+
+// Writes a message to a group, or a thread of a group.
+// The message writer is a manager, not a bot.
+message WriteGroupMessageAsManagerRequest {
+  string channel_id = 5 [(buf.validate.field).required = true];
+  string group_id = 1 [(buf.validate.field).required = true];
+  string root_message_id = 2;
+  bool broadcast = 4;
+  WriteMessageRequestDto dto = 3;
+}
+// Writes a message to a group, or a thread of a group.
+// The message writer is a manager, not a bot.
+message WriteGroupMessageAsManagerResult {
+  io.channel.coreapi.v1.model.Message message = 1;
+}
+
+// Writes a message to a direct chat.
+// The message writer is only a manager.
+message WriteDirectChatMessageAsManagerRequest {
+  string direct_chat_id = 1 [(buf.validate.field).required = true];
+  string channel_id = 2 [(buf.validate.field).required = true];
+  string root_message_id = 3;
+  bool broadcast = 4;
+  WriteMessageRequestDto dto = 5;
+}
+
+// Writes a message to a direct chat.
+// The message writer is only a manager.
+message WriteDirectChatMessageAsManagerResult {
+  io.channel.coreapi.v1.model.Message message = 1;
+}
+
+// Writes a message to a user chat.
+message WriteUserChatMessageRequest {
+  string channel_id = 3 [(buf.validate.field).required = true];
+  string user_chat_id = 1 [(buf.validate.field).required = true];
+  WriteMessageRequestDto dto = 2;
+}
+
+// Writes a message to a user chat.
+message WriteUserChatMessageResult {
+  io.channel.coreapi.v1.model.Message message = 1;
+}
+
+// Writes a message to a user chat.
+// The message writer is a manager, not a bot.
+message WriteUserChatMessageAsManagerRequest {
+  string channel_id = 3 [(buf.validate.field).required = true];
+  string user_chat_id = 1 [(buf.validate.field).required = true];
+  WriteMessageRequestDto dto = 2;
+}
+
+// Writes a message to a user chat.
+// The message writer is a manager, not a bot.
+message WriteUserChatMessageAsManagerResult {
+  io.channel.coreapi.v1.model.Message message = 1;
+}
+
+// Writes a message to a user chat.
+// The message writer is a user, not a bot.
+message WriteUserChatMessageAsUserRequest {
+  string channel_id = 3 [(buf.validate.field).required = true];
+  string user_chat_id = 1 [(buf.validate.field).required = true];
+  WriteMessageRequestDto dto = 2;
+}
+
+// Writes a message to a user chat.
+// The message writer is a user, not a bot.
+message WriteUserChatMessageAsUserResult {
+  io.channel.coreapi.v1.model.Message message = 1;
+}

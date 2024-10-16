@@ -1,0 +1,75 @@
+syntax = "proto3";
+
+package io.channel.coreapi.v1.service;
+
+import "coreapi/v1/model/user.proto";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/struct.proto";
+import "buf/validate/validate.proto";
+
+option java_package = "io.channel.api.proto.coreapi.v1.service";
+option go_package = "github.com/channel-io/ch-proto/coreapi/v1/go/service";
+option java_multiple_files = true;
+
+// Deletes a user.
+message DeleteUserRequest {
+  string channel_id = 2 [(buf.validate.field).required = true];
+  string user_id = 1 [(buf.validate.field).required = true];
+}
+
+// Deletes a user.
+message DeleteUserResult {
+}
+
+// Retrieves a single user.
+message GetUserRequest {
+  string channel_id = 2 [(buf.validate.field).required = true];
+  string user_id = 1 [(buf.validate.field).required = true];
+}
+
+// Retrieves a single user.
+message GetUserResult {
+  io.channel.coreapi.v1.model.User user = 1;
+}
+
+// Patches properties of a user.
+message PatchUserRequest {
+  string channel_id = 3 [(buf.validate.field).required = true];
+  string user_id = 4 [(buf.validate.field).required = true];
+  PatchUserBody body = 1 [(buf.validate.field).required = true];
+  google.protobuf.FieldMask update_mask = 2 [(buf.validate.field).required = true];
+
+  message PatchUserBody {
+    bool mobile_number_qualified = 1;
+    bool email_qualified = 2;
+    google.protobuf.Struct profile = 3; // the profile object is patched based on json merge patch semantics.
+    google.protobuf.Struct profile_once = 4; // properties in profile_once are set only if a property was not set in the old profile.
+    repeated string tags = 5 [
+      (buf.validate.field).cel = {
+        id: "repeated.maxItems",
+        message: "value must contain no more than 20"
+        expression: "uint(this.size()) <= 20"
+      }
+    ];
+    bool blocked = 6;
+    bool unsubscribe_email = 7;
+    bool unsubscribe_texting = 8;
+    string language = 9;
+  }
+}
+
+// Patches properties of a user.
+message PatchUserResult {
+  io.channel.coreapi.v1.model.User user = 1;
+}
+
+// Searches a user.
+message SearchUserRequest {
+  string channel_id = 1 [(buf.validate.field).required = true];
+  string member_id = 2 [(buf.validate.field).required = true];
+}
+
+// Searches a user.
+message SearchUserResult {
+  io.channel.coreapi.v1.model.User user = 1;
+}

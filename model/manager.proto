@@ -1,0 +1,87 @@
+syntax = "proto3";
+
+package io.channel.coreapi.v1.model;
+
+import "coreapi/v1/model/name_desc.proto";
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+
+option java_package = "io.channel.api.proto.coreapi.v1.model";
+option go_package = "github.com/channel-io/ch-proto/coreapi/v1/go/model";
+option java_multiple_files = true;
+
+enum SessionWatch {
+    SESSION_WATCH_UNSPECIFIED = 0;
+    SESSION_WATCH_ALL = 1;
+    SESSION_WATCH_INFO = 2;
+    SESSION_WATCH_NONE = 3;
+}
+
+enum ChatAlertSound {
+    CHAT_ALERT_SOUND_UNSPECIFIED = 0;
+    CHAT_ALERT_SOUND_NONE = 1;
+    CHAT_ALERT_SOUND_DROP = 2;
+    CHAT_ALERT_SOUND_WOODY = 3;
+    CHAT_ALERT_SOUND_BOUNCE = 4;
+    CHAT_ALERT_SOUND_CRYSTAL = 5;
+    CHAT_ALERT_SOUND_XYLO = 6;
+    CHAT_ALERT_SOUND_QUICK_KNOCK = 7;
+    CHAT_ALERT_SOUND_CANDY = 8;
+    CHAT_ALERT_SOUND_SHINE = 9;
+}
+
+enum MeetAlertSound {
+    MEET_ALERT_SOUND_UNSPECIFIED = 0;
+    MEET_ALERT_SOUND_CUTE = 1;
+    MEET_ALERT_SOUND_BASIC = 2;
+    MEET_ALERT_SOUND_GENTLE = 3;
+    MEET_ALERT_SOUND_MARIMBA = 4;
+}
+
+message Manager {
+    string id = 1;
+    string channel_id = 2;
+    string account_id = 3;
+    string name = 4;
+    string description = 5;
+    bool show_description_to_front = 6;
+    map<string, io.channel.coreapi.v1.model.NameDesc> name_desc_i18n_map = 7;
+    google.protobuf.Struct profile = 8;
+    string email = 9;
+    bool show_email_to_front = 10;
+    string mobile_number = 11;
+    bool show_mobile_number_to_front = 12;
+    string role_id = 13;
+    bool removed = 14;
+    google.protobuf.Timestamp created_at = 15;
+    google.protobuf.Timestamp updated_at = 16;
+    bool display_as_channel = 17;
+    SessionWatch default_group_watch = 18;
+    SessionWatch default_direct_chat_watch = 19;
+    SessionWatch default_user_chat_watch = 20;
+    ChatAlertSound chat_alert_sound = 21;
+    MeetAlertSound meet_alert_sound = 22;
+    bool show_private_message_preview = 23;
+    float operator_score = 24;
+    float touch_score = 25;
+    bool operator_email_reminder = 26;
+    bool receive_unassigned_chat_alert = 27;
+    bool receive_unassigned_meet_alert = 28;
+    bool operator = 29;
+    bool default_all_mention_important = 30;
+    bool user_message_important = 31;
+    int32 auto_assign_capacity = 32;
+    string status_emoji = 33;
+    string status_text = 34;
+    google.protobuf.Timestamp status_clear_at = 35;
+    bool do_not_disturb = 36;
+    google.protobuf.Timestamp do_not_disturb_clear_at = 37;
+    bool account_do_not_disturb = 38;
+    google.protobuf.Timestamp account_do_not_disturb_clear_at = 39;
+    bool enable_reacted_message_index = 40;
+    google.protobuf.Timestamp operator_updated_at = 41;
+    string avatar_url = 42;
+    string email_for_front = 43;
+    string mobile_number_for_front = 44;
+    bool meet_operator = 45;
+}

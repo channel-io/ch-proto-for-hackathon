@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+package io.channel.coreapi.v1.service;
+
+import "coreapi/v1/model/manager.proto";
+import "coreapi/v1/common/pagination.proto";
+import "buf/validate/validate.proto";
+
+option java_package = "io.channel.api.proto.coreapi.v1.service";
+option go_package = "github.com/channel-io/ch-proto/coreapi/v1/go/service";
+option java_multiple_files = true;
+
+// Retrieves a manager.
+message GetManagerRequest {
+  string channel_id = 2 [(buf.validate.field).required = true];
+  string manager_id = 1 [(buf.validate.field).required = true];
+}
+
+// Retrieves a manager.
+message GetManagerResult {
+  io.channel.coreapi.v1.model.Manager manager = 1;
+}
+
+// Batch get managers.
+message BatchGetManagersRequest {
+  string channel_id = 2 [(buf.validate.field).required = true];
+  repeated string manager_ids = 1 [
+    (buf.validate.field).cel = {
+      id: "repeated.minItems",
+      message: "value must contain at least 1"
+      expression: "this.size() >= 1" 
+    },
+    (buf.validate.field).cel = {
+      id: "repeated.maxItems",
+      message: "value must contain no more than 50"
+      expression: "this.size() <= 50"
+    }
+  ];
+}
+
+// Batch get managers.
+message BatchGetManagersResult {
+  repeated io.channel.coreapi.v1.model.Manager managers = 1;
+}
+
+// Search manager by parameters.
+message SearchManagersRequest {
+  string channel_id = 1 [(buf.validate.field).required = true];
+  io.channel.coreapi.v1.common.Pagination pagination = 2;
+}
+
+// Search manager by parameters.
+message SearchManagersResult {
+  repeated io.channel.coreapi.v1.model.Manager managers = 1;
+  string next = 2;
+}

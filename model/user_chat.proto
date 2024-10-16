@@ -1,0 +1,96 @@
+syntax = "proto3";
+
+package io.channel.coreapi.v1.model;
+
+import "coreapi/v1/model/user_chat_source.proto";
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+
+option java_package = "io.channel.api.proto.coreapi.v1.model";
+option go_package = "github.com/channel-io/ch-proto/coreapi/v1/go/model";
+option java_multiple_files = true;
+
+enum UserChatState {
+  USER_CHAT_STATE_UNSPECIFIED = 0;
+  USER_CHAT_STATE_CLOSED = 1;
+  USER_CHAT_STATE_OPENED = 2;
+  USER_CHAT_STATE_SNOOZED = 3;
+}
+
+enum UserChatSubtextType {
+  USER_CHAT_SUBTEXT_TYPE_UNSPECIFIED = 0;
+  USER_CHAT_SUBTEXT_TYPE_DESCRIPTION = 1;
+  USER_CHAT_SUBTEXT_TYPE_INCOMING = 2;
+}
+
+enum MissedReason {
+  MISSED_REASON_UNSPECIFIED = 0;
+  MISSED_REASON_NOT_IN_OPERATION = 1;
+  MISSED_REASON_USER_LEFT = 2;
+  MISSED_REASON_RING_TIME_OVER = 3;
+  MISSED_REASON_RATE_LIMIT = 4;
+  MISSED_REASON_NO_OPERATOR = 5;
+}
+
+enum UserChatGoalState {
+  USER_CHAT_GOAL_STATE_UNSPECIFIED = 0;
+  USER_CHAT_GOAL_STATE_ACHIEVED = 1;
+  USER_CHAT_GOAL_STATE_NOT_ACHIEVED = 2;
+  USER_CHAT_GOAL_STATE_WAITING = 3;
+  USER_CHAT_GOAL_STATE_NONE = 4;
+}
+
+message UserChat {
+  string id = 1;
+  string channel_id = 2;
+  string contact_medium_type = 3;
+  string live_meet_id = 4;
+  bool sync = 5;
+  UserChatState state = 6;
+  MissedReason missed_reason = 7;
+  bool managed = 8;
+  string user_id = 9;
+  string xer_id = 10;
+  string name = 11;
+  string title = 12;
+  string description = 13;
+  UserChatSubtextType subtext_type = 14;
+  google.protobuf.Struct handling = 15;
+  google.protobuf.Struct source_old = 16 [deprecated = true]; // use source instead
+  io.channel.coreapi.v1.model.UserChatSource source = 52;
+  repeated string manager_ids = 17;
+  string assignee_id = 18;
+  string team_id = 19;
+  repeated string tags = 20;
+  string goal_event_name = 21;
+  google.protobuf.Struct goal_event_query = 22;
+  google.protobuf.Timestamp goal_checked_at = 23;
+  UserChatGoalState goal_state = 24;
+  google.protobuf.Timestamp first_opened_at = 25;
+  google.protobuf.Timestamp opened_at = 26;
+  google.protobuf.Timestamp created_at = 27;
+  google.protobuf.Timestamp updated_at = 28;
+  string front_message_id = 29;
+  google.protobuf.Timestamp front_updated_at = 30;
+  string desk_message_id = 31;
+  google.protobuf.Timestamp desk_updated_at = 32;
+  string first_assignee_id_after_open = 33;
+  google.protobuf.Timestamp first_replied_at_after_open = 34;
+  bool one_stop = 35;
+  int64 waiting_time = 36;
+  int64 avg_reply_time = 37;
+  int64 total_reply_time = 38;
+  int32 reply_count = 39;
+  int64 resolution_time = 40;
+  int64 operation_waiting_time = 41;
+  int64 operation_avg_reply_time = 42;
+  int64 operation_total_reply_time = 43;
+  int32 operation_reply_count = 44;
+  int64 operation_resolution_time = 45;
+  google.protobuf.Timestamp first_asked_at = 46;
+  google.protobuf.Timestamp asked_at = 47;
+  google.protobuf.Timestamp closed_at = 48;
+  google.protobuf.Timestamp snoozed_at = 49;
+  google.protobuf.Timestamp expires_at = 50;
+  int64 version = 51;
+}

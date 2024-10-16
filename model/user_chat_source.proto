@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package io.channel.coreapi.v1.model;
+
+option java_package = "io.channel.api.proto.coreapi.v1.model";
+option go_package = "github.com/channel-io/ch-proto/coreapi/v1/go/model";
+option java_multiple_files = true;
+
+message UserChatSource {
+  string page = 1;
+  string marketing_id = 2;
+  string marketing_type = 3;
+  string support_bot_id = 4;
+  string support_bot_revision_id = 5;
+  repeated string support_bot_section_path = 6;
+  string workflow_id = 7;
+  string workflow_revision_id = 8;
+  string workflow_trace_id = 9;
+  repeated string workflow_section_path = 10;
+  string app_messenger_id = 11;
+  string app_messenger_medium_type = 12;
+  string app_messenger_display_name = 13;
+}

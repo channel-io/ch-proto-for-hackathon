@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+package io.channel.coreapi.v1.service;
+
+import "coreapi/v1/model/group.proto";
+import "coreapi/v1/common/pagination.proto";
+import "buf/validate/validate.proto";
+
+option java_package = "io.channel.api.proto.coreapi.v1.service";
+option go_package = "github.com/channel-io/ch-proto/coreapi/v1/go/service";
+option java_multiple_files = true;
+
+// Retrieves a single group.
+message GetGroupRequest {
+  string channel_id = 2 [(buf.validate.field).required = true];
+  string group_id = 1 [(buf.validate.field).required = true];
+}
+
+// Retrieves a single group.
+message GetGroupResult {
+  io.channel.coreapi.v1.model.Group group = 1;
+}
+
+// Retrieves a group list.
+//
+// The groups retrieved through this endpoint is restricted by the `limit` query parameter,
+// and is capped to values in the closed interval `[1,500]`
+// Pagination is supported through the `since` query parameter along with the `next` value
+// contained in the root object of the JSON response.
+// Successive queries to this endpoint using the previous `next` value
+// as the `since` parameter will ultimately retrieve all public groups in the channel.
+// If the `since` parameter is left empty,
+// the list retrieved will start with the first group in ascending order of group.name
+message SearchGroupsRequest {
+  io.channel.coreapi.v1.common.Pagination pagination = 1;
+  string channel_id = 2 [(buf.validate.field).required = true];
+}
+
+// Retrieves a group list.
+message SearchGroupsResult {
+  string next = 1;
+  repeated io.channel.coreapi.v1.model.Group groups = 2;
+}

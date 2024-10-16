@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package io.channel.coreapi.v1.model;
+
+option java_package = "io.channel.api.proto.coreapi.v1.model";
+option go_package = "github.com/channel-io/ch-proto/coreapi/v1/go/model";
+option java_multiple_files = true;
+
+enum ColorVariant {
+  COLOR_VARIANT_UNSPECIFIED = 0;
+  COLOR_VARIANT_RED = 1;
+  COLOR_VARIANT_ORANGE = 2;
+  COLOR_VARIANT_YELLOW = 3;
+  COLOR_VARIANT_OLIVE = 4;
+  COLOR_VARIANT_GREEN = 5;
+  COLOR_VARIANT_COBALT = 6;
+  COLOR_VARIANT_PURPLE = 7;
+  COLOR_VARIANT_PINK = 8;
+  COLOR_VARIANT_NAVY = 9;
+}

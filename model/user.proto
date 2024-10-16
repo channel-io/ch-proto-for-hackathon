@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+package io.channel.coreapi.v1.model;
+
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+
+option java_package = "io.channel.api.proto.coreapi.v1.model";
+option go_package = "github.com/channel-io/ch-proto/coreapi/v1/go/model";
+option java_multiple_files = true;
+
+enum UserType {
+  USER_TYPE_UNSPECIFIED = 0;
+  USER_TYPE_MEMBER = 1;
+  USER_TYPE_LEAD = 2;
+  USER_TYPE_UNIFIED = 3;
+}
+
+message User {
+  string id = 1;
+  string channel_id = 2;
+  string member_id = 3;
+  string veil_id = 4;
+  string unified_id = 5;
+  UserType type = 6;
+  string name = 7;
+  bool mobile_number_qualified = 8;
+  bool email_qualified = 9;
+  google.protobuf.Struct profile = 10;
+  repeated string tags = 11;
+  int32 alert = 12;
+  int32 unread = 13;
+  string pop_up_chat_id = 14;
+  bool blocked = 15;
+  bool unsubscribe_email = 16;
+  bool unsubscribe_texting = 17;
+  bool has_chat = 18;
+  string main_chat_id = 19;
+  bool has_push_token = 20;
+  string language = 21;
+  string country = 22;
+  string time_zone = 23;
+  string province = 24;
+  string city = 25;
+  double latitude = 26;
+  double longitude = 27;
+  google.protobuf.Struct web = 28;
+  google.protobuf.Struct mobile = 29;
+  int32 sessions_count = 30;
+  google.protobuf.Timestamp last_seen_at = 31;
+  google.protobuf.Timestamp created_at = 32;
+  google.protobuf.Timestamp updated_at = 33;
+  int64 version = 34;
+}

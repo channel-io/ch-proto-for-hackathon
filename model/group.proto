@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package io.channel.coreapi.v1.model;
+
+import "google/protobuf/timestamp.proto";
+
+option java_package = "io.channel.api.proto.coreapi.v1.model";
+option go_package = "github.com/channel-io/ch-proto/coreapi/v1/go/model";
+option java_multiple_files = true;
+
+enum GroupScope {
+  GROUP_SCOPE_UNSPECIFIED = 0;
+  GROUP_SCOPE_PUBLIC = 1;
+  GROUP_SCOPE_PRIVATE = 2;
+  GROUP_SCOPE_ALL = 3;
+}
+
+message Group {
+  string id = 1;
+  string channel_id = 2;
+  string title = 3; // min length: 2, max length: 20, uniqueness in channel
+  GroupScope scope = 4;
+  repeated string manager_ids = 5; // min size: 1, no duplication
+  string icon = 6; // regexp = "\S+"
+  string description = 7; // min length: 0, max length: 200
+  google.protobuf.Timestamp created_at = 8;
+  google.protobuf.Timestamp updated_at = 9;
+}

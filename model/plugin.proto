@@ -1,0 +1,98 @@
+syntax = "proto3";
+
+package io.channel.coreapi.v1.model;
+
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+
+option java_package = "io.channel.api.proto.coreapi.v1.model";
+option go_package = "github.com/channel-io/ch-proto/coreapi/v1/go/model";
+option java_multiple_files = true;
+
+enum PluginState {
+  PLUGIN_STATE_UNSPECIFIED = 0;
+  PLUGIN_STATE_WAITING = 1;
+  PLUGIN_STATE_ACTIVE = 2;
+}
+
+enum Appearance {
+  APPEARANCE_UNSPECIFIED = 0;
+  APPEARANCE_LIGHT = 1;
+  APPEARANCE_DARK = 2;
+  APPEARANCE_SYSTEM = 3;
+}
+
+enum ButtonType {
+  BUTTON_TYPE_UNSPECIFIED = 0;
+  BUTTON_TYPE_LEGACY = 1;
+  BUTTON_TYPE_CUSTOM_IMAGE = 2;
+  BUTTON_TYPE_CUSTOM_ICON_BUTTON = 3;
+}
+
+enum IconButton {
+  ICON_BUTTON_UNSPECIFIED = 0;
+  ICON_BUTTON_CHANNEL = 1;
+  ICON_BUTTON_CHANNEL_FILLED = 2;
+  ICON_BUTTON_CHAT_BUBBLE_ALT = 3;
+  ICON_BUTTON_CHAT_BUBBLE_ALT_FILLED = 4;
+  ICON_BUTTON_CHAT_BUBBLE_FILLED = 5;
+  ICON_BUTTON_CHAT_LIGHTNING_FILLED = 6;
+  ICON_BUTTON_CHAT_PROGRESS = 7;
+  ICON_BUTTON_CHAT_PROGRESS_FILLED = 8;
+  ICON_BUTTON_CHAT_QUESTION = 9;
+  ICON_BUTTON_CHAT_QUESTION_FILLED = 10;
+  ICON_BUTTON_COMMENT = 11;
+  ICON_BUTTON_COMMENT_FILLED = 12;
+  ICON_BUTTON_COMMUNICATION = 13;
+  ICON_BUTTON_HEADSET = 14;
+  ICON_BUTTON_HELP_FILLED = 15;
+  ICON_BUTTON_SEND_FORWARD = 16;
+  ICON_BUTTON_SEND_FORWARD_FILLED = 17;
+  ICON_BUTTON_SMS = 18;
+  ICON_BUTTON_SMS_FILLED = 19;
+}
+
+enum PluginPosition {
+  PLUGIN_POSITION_UNSPECIFIED = 0;
+  PLUGIN_POSITION_LEFT = 1;
+  PLUGIN_POSITION_RIGHT = 2;
+}
+
+enum BubblePosition {
+  BUBBLE_POSITION_UNSPECIFIED = 0;
+  BUBBLE_POSITION_TOP = 1;
+  BUBBLE_POSITION_BOTTOM = 2;
+}
+
+message Plugin {
+  string id = 1;
+  string key = 2;
+  string channel_id = 3;
+  PluginState state = 4;
+  string name = 5;
+  google.protobuf.Timestamp created_at = 6;
+  Appearance appearance = 7;
+
+  bool label_button = 8;
+  string label_button_text = 9;
+  google.protobuf.Struct label_button_text_i18n_map = 10;
+  ButtonType button_type = 11;
+  IconButton icon_button = 12;
+
+  int32 desk_margin_x = 13;
+  int32 desk_margin_y = 14;
+  PluginPosition desk_position = 15;
+  string desk_image_url = 16;
+
+  int32 mobile_margin_x = 17;
+  int32 mobile_margin_y = 18;
+  PluginPosition mobile_position = 19;
+  bool mobile_hide_button = 20;
+  BubblePosition mobile_bubble_position = 21;
+  string mobile_image_url = 22;
+
+  string custom_image_url = 23;
+  repeated string url_white_list = 24;
+  double run_rate = 25;
+  string facebook_pixel_id = 26;
+}

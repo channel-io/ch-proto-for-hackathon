@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package io.channel.coreapi.v1.service;
+
+import "coreapi/v1/model/direct_chat.proto";
+
+option java_package = "io.channel.api.proto.coreapi.v1.service";
+option go_package = "github.com/channel-io/ch-proto/coreapi/v1/go/service";
+option java_multiple_files = true;
+
+// Creates a direct chat.
+message CreateDirectChatRequest {
+  string channel_id = 1;
+  repeated string manager_ids = 2;
+}
+
+// Creates a direct chat.
+message CreateDirectChatResult {
+  io.channel.coreapi.v1.model.DirectChat direct_chat = 1;
+}

@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package io.channel.coreapi.v1.service;
+
+import "coreapi/v1/model/user_chat.proto";
+import "google/protobuf/duration.proto";
+import "buf/validate/validate.proto";
+
+option java_package = "io.channel.api.proto.coreapi.v1.service";
+option go_package = "github.com/channel-io/ch-proto/coreapi/v1/go/service";
+option java_multiple_files = true;
+
+// Creates a new user chat.
+message CreateUserChatRequest {
+  string channel_id = 1 [(buf.validate.field).required = true];
+  string user_id = 2 [(buf.validate.field).required = true];
+}
+
+// Creates a new user chat.
+message CreateUserChatResult {
+  io.channel.coreapi.v1.model.UserChat user_chat = 1;
+}
+
+// Retrieves a single user chat.
+message GetUserChatRequest {
+  string channel_id = 2 [(buf.validate.field).required = true];
+  string user_chat_id = 1 [(buf.validate.field).required = true];
+}
+
+// Retrieves a single user chat.
+message GetUserChatResult {
+  io.channel.coreapi.v1.model.UserChat user_chat = 1;
+}
+
+// Update user chat state.
+message UpdateUserChatStateRequest {
+  string channel_id = 5 [(buf.validate.field).required = true];
+  string user_chat_id = 1 [(buf.validate.field).required = true];
+  io.channel.coreapi.v1.model.UserChatState state = 2 [(buf.validate.field).required = true];
+  google.protobuf.Duration duration = 3;
+  string bot_name = 4 [
+    (buf.validate.field).cel = {
+      id: "string.maxLen",
+      message: "value must be no more than 30 characters",
+      expression: "size(this) <= 30"
+    },
+    (buf.validate.field).cel = {
+      id: "string.minLen",
+      message: "value must be at least 1 characters",
+      expression: "size(this) >= 1"
+    },
+    (buf.validate.field).string.pattern = "^[^@#$%:/]+$",
+    (buf.validate.field).required = true
+  ];
+}
+
+// Update user chat state.
+message UpdateUserChatStateResult {
+  io.channel.coreapi.v1.model.UserChat user_chat = 1;
+}
